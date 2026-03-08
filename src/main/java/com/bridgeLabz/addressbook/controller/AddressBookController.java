@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -13,6 +14,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.*;
 import com.bridgeLabz.addressbook.model.Contact;
+import com.google.gson.Gson;
+import java.lang.reflect.Type;
+import com.google.gson.reflect.TypeToken;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
@@ -215,5 +219,43 @@ public class AddressBookController {
 
         return lines;
     }
+
+    @GetMapping("/writeJSON")
+    public String writeToJSON() {
+        try{
+            Gson gson = new Gson();
+
+            List<Contact> contacts = addressbooks.values().stream()
+                                                          .flatMap(List::stream)
+                                                          .toList();
+            
+            FileWriter writer = new FileWriter("addressbook.json");
+            gson.toJson(contacts, writer);
+            writer.close();
+
+            return "Contacts written in JSON file";
+        }
+        catch(Exception e){
+            return "Error writing in JSON";
+        }
+    }
+
+    @GetMapping("/readJSON")
+    public List<Contact> readFromJSON() {
+        try{
+            Gson gson = new Gson();
+            FileReader reader = new FileReader("addressbook.json");
+            Type type = new TypeToken<List<Contact>>(){}.getType();
+            List<Contact> contacts = gson.fromJson(reader, type);
+            reader.close();
+            return contacts;
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+    
+    
   
 }
