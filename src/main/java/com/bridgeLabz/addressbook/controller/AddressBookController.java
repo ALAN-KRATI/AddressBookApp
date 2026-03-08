@@ -1,66 +1,36 @@
 package com.bridgeLabz.addressbook.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.*;
 import com.bridgeLabz.addressbook.model.Contact;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
-
+import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("/addressbook")
 public class AddressBookController {
-    private List<Contact> contacts = new ArrayList<>();
+    private Map<String, List<Contact>> addressbooks = new HashMap<>();
+
+    @PostMapping("/add/{bookName}")
+    public String addContact(@PathVariable String bookName, @RequestBody Contact contact) {
+        addressbooks.computeIfAbsent(bookName, k -> new ArrayList<>()).add(contact);
+        
+        return "Contact added to " + bookName + " address book";
+    }
     
-    @PostMapping("/add")
-    public String createContact(@RequestBody Contact contact){
-        contacts.add(contact);
-        return "Contact added to Address Book successfully";
+    @GetMapping("/{bookName}")
+    public List<Contact> getContacts(@PathVariable String bookName){
+        return addressbooks.getOrDefault(bookName, new ArrayList<>());
     }
 
     @GetMapping("/all")
-    public List<Contact> getAllContacts() {
-        return contacts;
-    }
-
-    @PutMapping("/edit/{firstName}")
-    public String editContact(@PathVariable String firstName, @RequestBody Contact contact) {
-        for(Contact c : contacts){
-            if(c.getFirstName().equalsIgnoreCase(firstName)){
-                c.setLastName(contact.getLastName());
-                c.setAddress(contact.getAddress());
-                c.setCity(contact.getCity());
-                c.setState(contact.getState());
-                c.setZip(contact.getZip());
-                c.setPhoneNumber(contact.getPhoneNumber());
-                c.setEmail(contact.getEmail());
-
-                return "Contact updated successfully";
-            }
-        }
-        
-        return "Contact not found";
-    }
-
-    @DeleteMapping("/delete/{firstName}")
-    public String deleteContact(@PathVariable String firstName){
-        for(Contact c : contacts){
-            if(c.getFirstName().equalsIgnoreCase(firstName)){
-                contacts.remove(c);
-                return "Contact deleted successfully";
-            }
-        }
-
-        return "Contact not found";
-    }
-
-    @PostMapping("/addMultiple")
-    public String addMultipleContacts(@RequestBody List<Contact> newContacts) {
-        contacts.addAll(newContacts);        
-        return "Multiple contacts added successfully";
-    }
+    public Map<String, List<Contact>> getAllAddressBooks() {
+        return addressbooks;
+    } 
     
 }
