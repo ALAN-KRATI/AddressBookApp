@@ -11,6 +11,7 @@ import com.bridgeLabz.addressbook.model.Contact;
 
 
 
+
 @RestController
 @RequestMapping("/addressbook")
 public class AddressBookController {
@@ -67,5 +68,22 @@ public class AddressBookController {
                                     .flatMap(List::stream)
                                     .collect(Collectors.groupingBy(Contact::getState));
     }
+
+    @GetMapping("/count/city")
+    public Map<String, Long> countByCity() {
+        return addressbooks.values().stream()
+                                    .flatMap(List::stream)
+                                    .collect(Collectors.groupingBy
+                                        (Contact::getCity, Collectors.counting()
+                                    ));
+    }
     
+    @GetMapping("/count/state")
+    public Map<String, Long> countByState() {
+        return addressbooks.values().stream()
+                                    .flatMap(List::stream)
+                                    .collect(Collectors.groupingBy
+                                        (Contact::getState, Collectors.counting()
+                                    ));
+    }
 }
