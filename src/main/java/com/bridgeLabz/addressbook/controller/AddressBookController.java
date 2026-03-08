@@ -13,8 +13,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.*;
 import com.bridgeLabz.addressbook.model.Contact;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 
@@ -126,4 +124,52 @@ public class AddressBookController {
                                     .toList();
     }
 
+    @GetMapping("/write")
+    public String writeToFile(){
+        try{
+            FileWriter writer = new FileWriter("addressbooks.txt");
+
+            for(List<Contact> contacts : addressbooks.values()){
+                for(Contact c : contacts){
+                    writer.write(
+                        c.getFirstName() + " | " +
+                        c.getLastName() + " | " + 
+                        c.getAddress() + " | " + 
+                        c.getCity() + " | " +
+                        c.getState() +  " | " +
+                        c.getZip() + " | " + 
+                        c.getPhoneNumber() + " | " +
+                        c.getEmail() + "\n"
+                    );
+                }
+            }
+
+            writer.close();
+            return "Contacts written to file successfully";
+        } 
+        catch(IOException e){
+            return "Error writing file";
+        }    
+    }
+
+    @GetMapping("/read")
+    public List<String> readFromFile() {
+        List<String> lines = new ArrayList<>();
+
+        try{
+            BufferedReader reader = new BufferedReader(new FileReader("addressbooks.txt"));
+
+            String line;
+            while((line = reader.readLine()) != null){
+                lines.add(line);
+            }
+
+            reader.close();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+
+        return lines;
+    }
 }
