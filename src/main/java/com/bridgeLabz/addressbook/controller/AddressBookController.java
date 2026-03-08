@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.*;
 import com.bridgeLabz.addressbook.model.Contact;
+
 
 
 @RestController
@@ -50,6 +52,20 @@ public class AddressBookController {
                                     .flatMap(List::stream)
                                     .filter(c -> c.getState().equalsIgnoreCase(state))
                                     .toList();
+    }    
+
+    @GetMapping("/view/city")
+    public Map<String, List<Contact>> viewContactsByCity() {
+        return addressbooks.values().stream()
+                                    .flatMap(List::stream)
+                                    .collect(Collectors.groupingBy(Contact::getCity));
+    }
+
+    @GetMapping("/view/state")
+    public Map<String, List<Contact>> viewContactsByState() {
+        return addressbooks.values().stream()
+                                    .flatMap(List::stream)
+                                    .collect(Collectors.groupingBy(Contact::getState));
     }
     
 }
