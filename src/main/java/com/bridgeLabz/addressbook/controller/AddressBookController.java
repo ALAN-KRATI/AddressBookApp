@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.*;
 import com.bridgeLabz.addressbook.model.Contact;
+import com.bridgeLabz.addressbook.service.AddressBookService;
+import com.bridgeLabz.addressbook.service.AddressBookServiceImp;
 import com.google.gson.Gson;
 import java.lang.reflect.Type;
 import com.google.gson.reflect.TypeToken;
@@ -256,6 +258,12 @@ public class AddressBookController {
         }
     }
     
+    @GetMapping("/db/contacts")
+    public List<Contact> getContactsFromDB() {
+        AddressBookService service = new AddressBookServiceImp();
+
+        return service.getAllContacts();
+    }
     
   
 }

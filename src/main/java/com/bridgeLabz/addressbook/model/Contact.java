@@ -92,4 +92,3 @@ public class Contact {
         return firstName + " | " + lastName + " | " + address + " | " + city + " | " + state + " | " + zip + " | " + phoneNumber + " | " + email;
     }
 }
-
