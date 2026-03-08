@@ -41,5 +41,18 @@ public class AddressBookController {
         
         return "Contact not found";
     }
+
+    @DeleteMapping("/delete/{firstName}")
+    public String deleteContact(@PathVariable String firstName){
+        for(Contact c : contacts){
+            if(c.getFirstName().equalsIgnoreCase(firstName)){
+                contacts.remove(c);
+                return "Contact deleted successfully";
+            }
+        }
+
+        return "Contact not found";
+    }
+
     
 }
