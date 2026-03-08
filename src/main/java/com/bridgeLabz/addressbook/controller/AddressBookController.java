@@ -8,8 +8,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.*;
 import com.bridgeLabz.addressbook.model.Contact;
-
-
+import org.springframework.web.bind.annotation.GetMapping;
 
 
 @RestController
@@ -86,4 +85,13 @@ public class AddressBookController {
                                         (Contact::getState, Collectors.counting()
                                     ));
     }
+
+    @GetMapping("/sort/name")
+    public List<Contact> sortByName() {
+        return addressbooks.values().stream()   
+                                    .flatMap(List::stream)
+                                    .sorted((c1, c2) -> c1.getFirstName().compareToIgnoreCase(c2.getFirstName()))
+                                    .toList();
+    }
+    
 }
