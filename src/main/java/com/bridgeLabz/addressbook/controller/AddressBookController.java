@@ -1,6 +1,7 @@
 package com.bridgeLabz.addressbook.controller;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +9,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.*;
 import com.bridgeLabz.addressbook.model.Contact;
-import org.springframework.web.bind.annotation.GetMapping;
 
 
 @RestController
@@ -94,4 +94,27 @@ public class AddressBookController {
                                     .toList();
     }
     
+    @GetMapping("/sort/city")
+    public List<Contact> sortByCity() {
+        return addressbooks.values().stream()   
+                                    .flatMap(List::stream)
+                                    .sorted((Comparator.comparing(Contact::getCity, String.CASE_INSENSITIVE_ORDER)))
+                                    .toList();
+    }
+
+    @GetMapping("/sort/state")
+    public List<Contact> sortByState() {
+        return addressbooks.values().stream()   
+                                    .flatMap(List::stream)
+                                    .sorted((Comparator.comparing(Contact::getState, String.CASE_INSENSITIVE_ORDER)))
+                                    .toList();
+    }
+
+    @GetMapping("/sort/zip")
+    public List<Contact> sortByZip() {
+        return addressbooks.values().stream()   
+                                    .flatMap(List::stream)
+                                    .sorted(Comparator.comparing(Contact::getZip))
+                                    .toList();
+    }
 }
