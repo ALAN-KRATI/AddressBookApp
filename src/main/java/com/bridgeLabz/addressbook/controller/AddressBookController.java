@@ -30,239 +30,108 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RestController
 @RequestMapping("/addressbook")
 public class AddressBookController {
-    private Map<String, List<Contact>> addressbooks = new HashMap<>();
+    AddressBookService service = new AddressBookServiceImp();
 
     @PostMapping("/add/{bookName}")
     public String addContact(@PathVariable String bookName, @RequestBody Contact contact) {
-        List<Contact> contacts = addressbooks.computeIfAbsent(bookName, k -> new ArrayList<>());
-        boolean duplicate = contacts.stream().anyMatch(c -> c.getFirstName().equalsIgnoreCase(contact.getFirstName()));
-        if(duplicate){
-            return "Duplicate contact cannot be added in " + bookName + " address book";
-        }
-
-        contacts.add(contact); 
-        return "Contact added to " + bookName + " address book";
+        return service.addContact(bookName, contact);
     }
     
     @GetMapping("/{bookName}")
     public List<Contact> getContacts(@PathVariable String bookName){
-        return addressbooks.getOrDefault(bookName, new ArrayList<>());
+        return service.getContacts(bookName);
     }
 
     @GetMapping("/all")
     public Map<String, List<Contact>> getAllAddressBooks() {
-        return addressbooks;
+        return service.getAllAddressBooks();
     } 
 
     @GetMapping("/search/city/{city}")
     public List<Contact> searchByCity(@PathVariable String city) {
-        return addressbooks.values().stream()
-                                    .flatMap(List::stream)
-                                    .filter(c -> c.getCity().equalsIgnoreCase(city))
-                                    .toList();
+        return service.searchByCity(city);
     }
     
     @GetMapping("/search/state/{state}")
     public List<Contact> searchByState(@PathVariable String state) {
-        return addressbooks.values().stream()
-                                    .flatMap(List::stream)
-                                    .filter(c -> c.getState().equalsIgnoreCase(state))
-                                    .toList();
+        return service.searchByState(state);
     }    
 
     @GetMapping("/view/city")
-    public Map<String, List<Contact>> viewContactsByCity() {
-        return addressbooks.values().stream()
-                                    .flatMap(List::stream)
-                                    .collect(Collectors.groupingBy(Contact::getCity));
+    public Map<String, List<Contact>> viewByCity() {
+        return service.viewByCity();
     }
 
     @GetMapping("/view/state")
-    public Map<String, List<Contact>> viewContactsByState() {
-        return addressbooks.values().stream()
-                                    .flatMap(List::stream)
-                                    .collect(Collectors.groupingBy(Contact::getState));
+    public Map<String, List<Contact>> viewByState() {
+        return service.viewByState();
     }
 
     @GetMapping("/count/city")
     public Map<String, Long> countByCity() {
-        return addressbooks.values().stream()
-                                    .flatMap(List::stream)
-                                    .collect(Collectors.groupingBy
-                                        (Contact::getCity, Collectors.counting()
-                                    ));
+        return service.countByCity();
     }
     
     @GetMapping("/count/state")
     public Map<String, Long> countByState() {
-        return addressbooks.values().stream()
-                                    .flatMap(List::stream)
-                                    .collect(Collectors.groupingBy
-                                        (Contact::getState, Collectors.counting()
-                                    ));
+        return service.countByState();
     }
 
     @GetMapping("/sort/name")
     public List<Contact> sortByName() {
-        return addressbooks.values().stream()   
-                                    .flatMap(List::stream)
-                                    .sorted((c1, c2) -> c1.getFirstName().compareToIgnoreCase(c2.getFirstName()))
-                                    .toList();
+        return service.sortByName();
     }
     
     @GetMapping("/sort/city")
     public List<Contact> sortByCity() {
-        return addressbooks.values().stream()   
-                                    .flatMap(List::stream)
-                                    .sorted((Comparator.comparing(Contact::getCity, String.CASE_INSENSITIVE_ORDER)))
-                                    .toList();
+        return service.sortByCity();
     }
 
     @GetMapping("/sort/state")
     public List<Contact> sortByState() {
-        return addressbooks.values().stream()   
-                                    .flatMap(List::stream)
-                                    .sorted((Comparator.comparing(Contact::getState, String.CASE_INSENSITIVE_ORDER)))
-                                    .toList();
+        return service.sortByState();
     }
 
     @GetMapping("/sort/zip")
     public List<Contact> sortByZip() {
-        return addressbooks.values().stream()   
-                                    .flatMap(List::stream)
-                                    .sorted(Comparator.comparing(Contact::getZip))
-                                    .toList();
+        return service.sortByZip();
     }
 
     @GetMapping("/write")
     public String writeToFile(){
-        try{
-            FileWriter writer = new FileWriter("addressbooks.txt");
-
-            for(List<Contact> contacts : addressbooks.values()){
-                for(Contact c : contacts){
-                    writer.write(
-                        c.getFirstName() + " | " +
-                        c.getLastName() + " | " + 
-                        c.getAddress() + " | " + 
-                        c.getCity() + " | " +
-                        c.getState() +  " | " +
-                        c.getZip() + " | " + 
-                        c.getPhoneNumber() + " | " +
-                        c.getEmail() + "\n"
-                    );
-                }
-            }
-
-            writer.close();
-            return "Contacts written to file successfully";
-        } 
-        catch(IOException e){
-            return "Error writing file";
-        }    
+        return service.writeToFile();
     }
 
     @GetMapping("/read")
     public List<String> readFromFile() {
-        List<String> lines = new ArrayList<>();
-
-        try{
-            BufferedReader reader = new BufferedReader(new FileReader("addressbooks.txt"));
-
-            String line;
-            while((line = reader.readLine()) != null){
-                lines.add(line);
-            }
-
-            reader.close();
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-
-        return lines;
+        return service.readFromFile();
     }
 
     @GetMapping("/writeCSV")
     public String writeToCSV() {
-        try(CSVWriter writer = new CSVWriter(new FileWriter("addressbook.csv"))){
-            for(List<Contact> contacts: addressbooks.values()){
-                for(Contact c : contacts){
-                    String[] lines = {
-                        c.getFirstName(),
-                        c.getLastName(),
-                        c.getAddress(),
-                        c.getCity(),
-                        c.getState(),
-                        c.getZip(),
-                        c.getPhoneNumber(),
-                        c.getEmail()
-                    };
-
-                    writer.writeNext(lines);
-                }
-            }
-            return "Contacts written to CSV File";
-        }
-        catch(IOException e){
-            return "Error writing in CSV";
-        }
+        return service.writeCSV();
     }
 
     @GetMapping("/readCSV")
     public List<String[]> readFromCSV() {
-        List<String[]> lines = new ArrayList<>();
-        try(CSVReader reader = new CSVReader(new FileReader("addressbook.csv"))){
-            lines = reader.readAll();
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-
-        return lines;
+        return service.readCSV();
     }
 
     @GetMapping("/writeJSON")
     public String writeToJSON() {
-        try{
-            Gson gson = new Gson();
-
-            List<Contact> contacts = addressbooks.values().stream()
-                                                          .flatMap(List::stream)
-                                                          .toList();
-            
-            FileWriter writer = new FileWriter("addressbook.json");
-            gson.toJson(contacts, writer);
-            writer.close();
-
-            return "Contacts written in JSON file";
-        }
-        catch(Exception e){
-            return "Error writing in JSON";
-        }
+        return service.writeJSON();
     }
 
     @GetMapping("/readJSON")
     public List<Contact> readFromJSON() {
-        try{
-            Gson gson = new Gson();
-            FileReader reader = new FileReader("addressbook.json");
-            Type type = new TypeToken<List<Contact>>(){}.getType();
-            List<Contact> contacts = gson.fromJson(reader, type);
-            reader.close();
-            return contacts;
-        }
-        catch(Exception e){
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
+        return service.readJSON();
     }
     
     @GetMapping("/db/contacts")
     public List<Contact> getContactsFromDB() {
         AddressBookService service = new AddressBookServiceImp();
 
-        return service.getAllContacts();
+        return service.getAllContactsFromDB();
     }
     
   
