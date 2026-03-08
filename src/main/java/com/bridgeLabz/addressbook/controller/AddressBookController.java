@@ -7,9 +7,7 @@ import java.util.Map;
 
 import org.springframework.web.bind.annotation.*;
 import com.bridgeLabz.addressbook.model.Contact;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.GetMapping;
+
 
 @RestController
 @RequestMapping("/addressbook")
@@ -37,5 +35,21 @@ public class AddressBookController {
     public Map<String, List<Contact>> getAllAddressBooks() {
         return addressbooks;
     } 
+
+    @GetMapping("/search/city/{city}")
+    public List<Contact> searchByCity(@PathVariable String city) {
+        return addressbooks.values().stream()
+                                    .flatMap(List::stream)
+                                    .filter(c -> c.getCity().equalsIgnoreCase(city))
+                                    .toList();
+    }
+    
+    @GetMapping("/search/state/{state}")
+    public List<Contact> searchByState(@PathVariable String state) {
+        return addressbooks.values().stream()
+                                    .flatMap(List::stream)
+                                    .filter(c -> c.getState().equalsIgnoreCase(state))
+                                    .toList();
+    }
     
 }
