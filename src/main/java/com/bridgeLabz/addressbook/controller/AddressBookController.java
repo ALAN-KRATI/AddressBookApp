@@ -18,8 +18,13 @@ public class AddressBookController {
 
     @PostMapping("/add/{bookName}")
     public String addContact(@PathVariable String bookName, @RequestBody Contact contact) {
-        addressbooks.computeIfAbsent(bookName, k -> new ArrayList<>()).add(contact);
-        
+        List<Contact> contacts = addressbooks.computeIfAbsent(bookName, k -> new ArrayList<>());
+        boolean duplicate = contacts.stream().anyMatch(c -> c.getFirstName().equalsIgnoreCase(contact.getFirstName()));
+        if(duplicate){
+            return "Duplicate contact cannot be added in " + bookName + " address book";
+        }
+
+        contacts.add(contact); 
         return "Contact added to " + bookName + " address book";
     }
     
