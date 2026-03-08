@@ -5,6 +5,9 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
 import com.bridgeLabz.addressbook.model.Contact;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 @RestController
@@ -54,5 +57,10 @@ public class AddressBookController {
         return "Contact not found";
     }
 
+    @PostMapping("/addMultiple")
+    public String addMultipleContacts(@RequestBody List<Contact> newContacts) {
+        contacts.addAll(newContacts);        
+        return "Multiple contacts added successfully";
+    }
     
 }
