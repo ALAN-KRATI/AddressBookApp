@@ -1,14 +1,15 @@
 package com.bridgeLabz.addressbook.controller;
 
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
+import com.bridgeLabz.addressbook.model.Contact;
+
 
 @RestController
+@RequestMapping("/addressbook")
 public class AddressBookController {
     
-    @GetMapping("/")
-    public String welcomeMessage() {
-        return "Welcome to Address Book Program";
+    @PostMapping("/create")
+    public Contact createContact(@RequestBody Contact contact){
+       return contact;
     }
-    
 }
