@@ -13,8 +13,12 @@ import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.*;
 import com.bridgeLabz.addressbook.model.Contact;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
+import com.opencsv.exceptions.CsvException;
 
-
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -172,4 +176,44 @@ public class AddressBookController {
 
         return lines;
     }
+
+    @GetMapping("/writeCSV")
+    public String writeToCSV() {
+        try(CSVWriter writer = new CSVWriter(new FileWriter("addressbook.csv"))){
+            for(List<Contact> contacts: addressbooks.values()){
+                for(Contact c : contacts){
+                    String[] lines = {
+                        c.getFirstName(),
+                        c.getLastName(),
+                        c.getAddress(),
+                        c.getCity(),
+                        c.getState(),
+                        c.getZip(),
+                        c.getPhoneNumber(),
+                        c.getEmail()
+                    };
+
+                    writer.writeNext(lines);
+                }
+            }
+            return "Contacts written to CSV File";
+        }
+        catch(IOException e){
+            return "Error writing in CSV";
+        }
+    }
+
+    @GetMapping("/readCSV")
+    public List<String[]> readFromCSV() {
+        List<String[]> lines = new ArrayList<>();
+        try(CSVReader reader = new CSVReader(new FileReader("addressbook.csv"))){
+            lines = reader.readAll();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return lines;
+    }
+  
 }
