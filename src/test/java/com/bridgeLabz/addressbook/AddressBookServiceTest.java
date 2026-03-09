@@ -106,4 +106,13 @@ class AddressBookServiceTest {
         assertEquals("Alankrati", list.get(0).getFirstName());
         assertEquals("James", list.get(1).getFirstName());
     }
+
+    @Test
+    void givenContact_whenUpdated_shouldSyncWithDB() {
+        Contact c = new Contact("Alice", "Smith", "Street 9", "Mumbai", "Maharastra", "222222", "987656789", "alicia@gmail.com");
+        service.updateContact(c);
+        Contact dbContact = service.getContactFromDB("Alice", "Smith");
+
+        assertEquals(c, dbContact);
+    }
 }

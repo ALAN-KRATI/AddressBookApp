@@ -46,4 +46,8 @@ public interface AddressBookService {
     List<Contact> readJSON();
 
     List<Contact> getAllContactsFromDB();
+
+    boolean updateContact(Contact contact);
+
+    Contact getContactFromDB(String firstName, String lastName);
 }

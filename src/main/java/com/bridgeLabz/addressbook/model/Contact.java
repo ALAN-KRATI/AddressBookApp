@@ -91,4 +91,13 @@ public class Contact {
     public String toString(){
         return firstName + " | " + lastName + " | " + address + " | " + city + " | " + state + " | " + zip + " | " + phoneNumber + " | " + email;
     }
+
+    @Override
+    public boolean equals(Object obj){
+        if(this == obj) return true;
+        if(obj == null || getClass() != obj.getClass()) return false;
+
+        Contact c = (Contact) obj;
+        return firstName.equals(c.firstName) && lastName.equals(c.lastName) && phoneNumber.equals(c.phoneNumber) && email.equals(c.email);
+    }
 }

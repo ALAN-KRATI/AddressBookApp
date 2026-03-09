@@ -281,4 +281,78 @@ public class AddressBookServiceImp implements AddressBookService{
 
         return contacts;
     }
+
+    @Override
+    public boolean updateContact(Contact contact){
+        try{
+            Connection connection = DatabaseConnection.getConnection();
+            String sql = "UPDATE contacts SET address=?, city=?, state=?, zip=?, phoneNumber=?, email=? WHERE firstName=? AND lastName=?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            ps.setString(1, contact.getAddress());
+            ps.setString(2, contact.getCity());
+            ps.setString(3, contact.getState());
+            ps.setString(4, contact.getZip());
+            ps.setString(5, contact.getPhoneNumber());
+            ps.setString(6, contact.getEmail());
+            ps.setString(7, contact.getFirstName());
+            ps.setString(8, contact.getLastName());
+
+            int rows = ps.executeUpdate();
+            if(rows > 0){
+                addressbooks.values()
+                        .stream()
+                        .flatMap(List::stream)
+                        .filter(c -> c.getFirstName()
+                        .equalsIgnoreCase(contact.getFirstName()) && c.getLastName().equalsIgnoreCase(contact.getLastName()))
+                        .forEach(c -> {
+                            c.setAddress(contact.getAddress());
+                            c.setCity(contact.getCity());
+                            c.setState(contact.getState());
+                            c.setZip(contact.getZip());
+                            c.setPhoneNumber(contact.getPhoneNumber());
+                            c.setEmail(contact.getEmail());
+                        });
+                return true;
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    @Override
+    public Contact getContactFromDB(String firstName, String lastName){
+        try{
+            Connection connection = DatabaseConnection.getConnection();
+            String sql = "SELECT * FROM contacts WHERE firstName=? AND lastName=?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            ps.setString(1, firstName);
+            ps.setString(2, lastName);
+
+            ResultSet set = ps.executeQuery();
+            Contact contact = new Contact();
+
+            if(set.next()){
+                contact.setFirstName(set.getString("firstName"));
+                contact.setLastName(set.getString("lastName"));
+                contact.setAddress(set.getString("address"));
+                contact.setCity(set.getString("city"));
+                contact.setState(set.getString("state"));
+                contact.setZip(set.getString("zip"));
+                contact.setPhoneNumber(set.getString("phoneNumber"));
+                contact.setEmail(set.getString("email"));
+            }
+
+            return contact;
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 }

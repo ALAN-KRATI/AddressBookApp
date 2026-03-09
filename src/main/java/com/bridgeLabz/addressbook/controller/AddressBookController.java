@@ -25,6 +25,10 @@ import com.opencsv.exceptions.CsvException;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 
 @RestController
@@ -134,5 +138,12 @@ public class AddressBookController {
         return service.getAllContactsFromDB();
     }
     
+    @PutMapping("/update")
+    public String updateContact(@RequestBody Contact contact){
+        boolean b = service.updateContact(contact);
+        if(b) return "Contact updated successfully";
+
+        return "Contact not found";
+    }
   
 }
