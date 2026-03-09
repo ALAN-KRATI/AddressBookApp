@@ -355,4 +355,39 @@ public class AddressBookServiceImp implements AddressBookService{
 
         return null;
     }
+
+    @Override
+    public List<Contact> getContactsByRange(String startDate, String endDate){
+        List<Contact> contacts = new ArrayList<>();
+
+        try{
+            Connection connection = DatabaseConnection.getConnection();
+            String sql = "SELECT * FROM contacts WHERE date_added BETWEEN ? AND ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, startDate);
+            ps.setString(2, endDate);
+
+            ResultSet set = ps.executeQuery();
+            while(set.next()){
+                Contact c = new Contact();
+                
+                c.setFirstName(set.getString("firstName"));
+                c.setLastName(set.getString("lastName"));
+                c.setAddress(set.getString("address"));
+                c.setCity(set.getString("city"));
+                c.setState(set.getString("state"));
+                c.setZip(set.getString("zip"));
+                c.setPhoneNumber(set.getString("phoneNumber"));
+                c.setEmail(set.getString("email"));
+
+                contacts.add(c);
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return contacts;
+    }
+
 }

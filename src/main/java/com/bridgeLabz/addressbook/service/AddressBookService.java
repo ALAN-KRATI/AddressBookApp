@@ -50,4 +50,6 @@ public interface AddressBookService {
     boolean updateContact(Contact contact);
 
     Contact getContactFromDB(String firstName, String lastName);
+
+    List<Contact> getContactsByRange(String startDate, String endDate);
 }

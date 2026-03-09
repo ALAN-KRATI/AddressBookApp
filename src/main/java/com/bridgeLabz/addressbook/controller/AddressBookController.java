@@ -47,8 +47,8 @@ public class AddressBookController {
     }
 
     @GetMapping("/all")
-    public Map<String, List<Contact>> getAllAddressBooks() {
-        return service.getAllAddressBooks();
+    public List<Contact> getAllContacts() {
+        return service.getAllContactsFromDB();
     } 
 
     @GetMapping("/search/city/{city}")
@@ -131,13 +131,6 @@ public class AddressBookController {
         return service.readJSON();
     }
     
-    @GetMapping("/db/contacts")
-    public List<Contact> getContactsFromDB() {
-        AddressBookService service = new AddressBookServiceImp();
-
-        return service.getAllContactsFromDB();
-    }
-    
     @PutMapping("/update")
     public String updateContact(@RequestBody Contact contact){
         boolean b = service.updateContact(contact);
@@ -145,5 +138,9 @@ public class AddressBookController {
 
         return "Contact not found";
     }
-  
+
+    @GetMapping("/contacts/date")
+    public List<Contact> getContactsByDate(@RequestParam String startDate, @RequestParam String endDate) {
+        return service.getContactsByRange(startDate, endDate);
+    }
 }
