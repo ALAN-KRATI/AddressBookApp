@@ -14,18 +14,36 @@ public class AddressBookJsonTest {
     List<Contact> addressBookMemory = new ArrayList<>();
 
     @Test
-    public void readContactsFromJsonServer() {
+    public void addMultipleContactsToJsonServer() {
 
         baseURI = "http://localhost:3000";
 
-        Response response = given().when().get("/contacts");
+        Contact contact1 = new Contact(
+                "Aman","Verma","Street 10","Delhi","Delhi",
+                "110001","9999991111","aman@gmail.com"
+        );
 
-        Contact[] contacts = response.as(Contact[].class);
+        Contact contact2 = new Contact(
+                "Riya","Sharma","Street 20","Mumbai","Maharashtra",
+                "400001","8888882222","riya@gmail.com"
+        );
 
-        for (Contact c : contacts) {
-            addressBookMemory.add(c);
+        List<Contact> contacts = List.of(contact1, contact2);
+
+        for(Contact contact : contacts){
+
+            Response response =
+                    given()
+                            .contentType("application/json")
+                            .body(contact)
+                            .when()
+                            .post("/contacts");
+
+            Contact newContact = response.as(Contact.class);
+
+            addressBookMemory.add(newContact);
         }
 
-        System.out.println("Contacts loaded: " + addressBookMemory.size());
+        System.out.println("Contacts added to memory: " + addressBookMemory.size());
     }
 }
