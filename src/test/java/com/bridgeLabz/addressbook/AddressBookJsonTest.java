@@ -1,6 +1,8 @@
 package com.bridgeLabz.addressbook;
 
 import com.bridgeLabz.addressbook.model.Contact;
+
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 
@@ -14,36 +16,36 @@ public class AddressBookJsonTest {
     List<Contact> addressBookMemory = new ArrayList<>();
 
     @Test
-    public void addMultipleContactsToJsonServer() {
+    public void updateContactInJsonServer() {
 
         baseURI = "http://localhost:3000";
 
-        Contact contact1 = new Contact(
-                "Aman","Verma","Street 10","Delhi","Delhi",
-                "110001","9999991111","aman@gmail.com"
+        RestAssured.defaultParser = io.restassured.parsing.Parser.JSON;
+
+        Contact updatedContact = new Contact(
+                "Rahul",
+                "Sharma",
+                "Street 999",
+                "Delhi",
+                "Delhi",
+                "110001",
+                "9999999999",
+                "rahul@gmail.com"
         );
 
-        Contact contact2 = new Contact(
-                "Riya","Sharma","Street 20","Mumbai","Maharashtra",
-                "400001","8888882222","riya@gmail.com"
-        );
+        Response response =
+                given()
+                        .contentType("application/json")
+                        .body(updatedContact)
+                .when()
+                        .put("/contacts/1");
 
-        List<Contact> contacts = List.of(contact1, contact2);
+        //System.out.println(response.asPrettyString());
 
-        for(Contact contact : contacts){
+        Contact contactResponse = response.as(Contact.class);
 
-            Response response =
-                    given()
-                            .contentType("application/json")
-                            .body(contact)
-                            .when()
-                            .post("/contacts");
+        addressBookMemory.add(contactResponse);
 
-            Contact newContact = response.as(Contact.class);
-
-            addressBookMemory.add(newContact);
-        }
-
-        System.out.println("Contacts added to memory: " + addressBookMemory.size());
+        System.out.println("Updated Contact: " + contactResponse);
     }
 }

@@ -3,15 +3,16 @@
     {
       "firstName": "Rahul",
       "lastName": "Sharma",
-      "address": "Street 68",
+      "address": "Street 999",
       "city": "Delhi",
       "state": "Delhi",
-      "zip": "222222",
+      "zip": "110001",
       "phoneNumber": "9999999999",
       "email": "rahul@gmail.com",
-      "id": "8517"
+      "id": "1"
     },
     {
+      "id": "2",
       "firstName": "Priya",
       "lastName": "Singh",
       "address": "Street 34",
@@ -19,30 +20,7 @@
       "state": "Maharastra",
       "zip": "343434",
       "phoneNumber": "8888888888",
-      "email": "priya@gmail.com",
-      "id": "d5a8"
-    },
-    {
-      "id": "a526",
-      "firstName": "Aman",
-      "lastName": "Verma",
-      "address": "Street 10",
-      "city": "Delhi",
-      "state": "Delhi",
-      "zip": "110001",
-      "phoneNumber": "9999991111",
-      "email": "aman@gmail.com"
-    },
-    {
-      "id": "3343",
-      "firstName": "Riya",
-      "lastName": "Sharma",
-      "address": "Street 20",
-      "city": "Mumbai",
-      "state": "Maharashtra",
-      "zip": "400001",
-      "phoneNumber": "8888882222",
-      "email": "riya@gmail.com"
+      "email": "priya@gmail.com"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
