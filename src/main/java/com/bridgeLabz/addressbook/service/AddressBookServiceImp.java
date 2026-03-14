@@ -40,9 +40,22 @@ public class AddressBookServiceImp implements AddressBookService {
     }
 
     @Override
+    public String addMulitpleContactdb(List<Contact> contact){
+        contact.forEach(c ->{
+            Thread thread = new Thread(() -> {
+                addContactdb(c);
+            });
+            thread.start();
+        });
+
+        return "All contacts added successfully!";
+    }
+
+    @Override
     public String addContactdb(Contact contact){
         try{
             Connection connection = DatabaseConnection.getConnection();
+            connection.setAutoCommit(false);
             String sql = "INSERT INTO contacts(firstName, lastName, address, city, state, zip, phoneNumber, email, date_added) VALUES(?, ?, ?, ?, ?, ?, ? ,?, CURDATE()) ";
             PreparedStatement ps = connection.prepareStatement(sql);
 
@@ -56,6 +69,7 @@ public class AddressBookServiceImp implements AddressBookService {
             ps.setString(8, contact.getEmail());
 
             ps.executeUpdate();
+            connection.commit();
             return "Contact successfully to Database";
         }
         catch(Exception e){

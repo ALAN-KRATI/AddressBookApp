@@ -8,4 +8,5 @@ import com.bridgeLabz.addressbook.model.Contact;
 public interface AddressBookService {
     List<Contact> getAllContactsFromDB();
     String addContactdb(Contact contact);
+    String addMulitpleContactdb(List<Contact> contact);
 }

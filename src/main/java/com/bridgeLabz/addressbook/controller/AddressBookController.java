@@ -13,8 +13,8 @@ import com.bridgeLabz.addressbook.service.AddressBookServiceImp;
 public class AddressBookController {
     AddressBookService service = new AddressBookServiceImp();
 
-    @PostMapping("/addToDB")
-    public String addContactToDB(@RequestBody Contact contact) {
-        return service.addContactdb(contact);
+    @PostMapping("/add-multiple")
+    public String addMulitpleContactToDB(@RequestBody List<Contact> contact) {
+        return service.addMulitpleContactdb(contact);
     }
 }
