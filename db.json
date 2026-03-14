@@ -1,0 +1,24 @@
+{
+  "contacts": [
+    {
+      "firstName": "Rahul",
+      "lastName": "Sharma",
+      "address":"Street 68",
+      "city": "Delhi",
+      "state": "Delhi",
+      "zip": "222222",
+      "phoneNumber": "9999999999",
+      "email": "rahul@gmail.com" 
+    },
+    {
+      "firstName": "Priya",
+      "lastName": "Singh",
+      "address": "Street 34",
+      "city": "Mumbai",
+      "state": "Maharastra",
+      "zip": "343434",
+      "phoneNumber": "8888888888",
+      "email": "priya@gmail.com"
+    }
+  ]
+}
