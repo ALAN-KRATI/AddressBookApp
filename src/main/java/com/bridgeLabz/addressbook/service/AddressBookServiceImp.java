@@ -5,6 +5,8 @@ import com.bridgeLabz.addressbook.util.DatabaseConnection;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.sql.*;
 
 public class AddressBookServiceImp implements AddressBookService {
@@ -75,5 +77,18 @@ public class AddressBookServiceImp implements AddressBookService {
         catch(Exception e){
             return "Error adding contact";
         }
+    }
+
+    //private AddressBookRepository repository = new AddressBookRepository();
+
+    private ExecutorService executor = Executors.newFixedThreadPool(3);
+
+    public void addContactAsync(Contact contact) {
+
+        executor.submit(() -> {
+            addContactdb(contact);
+            System.out.println("Contact added to DB in background thread");
+        });
+
     }
 }
