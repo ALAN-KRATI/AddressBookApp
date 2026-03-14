@@ -7,5 +7,5 @@ import com.bridgeLabz.addressbook.model.Contact;
 
 public interface AddressBookService {
     List<Contact> getAllContactsFromDB();
-    List<Contact> getContactsByRange(String startDate, String endDate);
+    String addContactdb(Contact contact);
 }

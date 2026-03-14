@@ -40,35 +40,26 @@ public class AddressBookServiceImp implements AddressBookService {
     }
 
     @Override
-    public List<Contact> getContactsByRange(String startDate, String endDate) {
-        List<Contact> contacts = new ArrayList<>();
-
-        try {
+    public String addContactdb(Contact contact){
+        try{
             Connection connection = DatabaseConnection.getConnection();
-            String sql = "SELECT * FROM contacts WHERE DATE(date_added) BETWEEN ? AND ?";
+            String sql = "INSERT INTO contacts(firstName, lastName, address, city, state, zip, phoneNumber, email, date_added) VALUES(?, ?, ?, ?, ?, ?, ? ,?, CURDATE()) ";
             PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, startDate);
-            ps.setString(2, endDate);
 
-            ResultSet set = ps.executeQuery();
-            while (set.next()) {
-                Contact c = new Contact();
+            ps.setString(1, contact.getFirstName());
+            ps.setString(2, contact.getLastName());
+            ps.setString(3, contact.getAddress());
+            ps.setString(4, contact.getCity());
+            ps.setString(5, contact.getState());
+            ps.setString(6, contact.getZip());
+            ps.setString(7, contact.getPhoneNumber());
+            ps.setString(8, contact.getEmail());
 
-                c.setFirstName(set.getString("firstName"));
-                c.setLastName(set.getString("lastName"));
-                c.setAddress(set.getString("address"));
-                c.setCity(set.getString("city"));
-                c.setState(set.getString("state"));
-                c.setZip(set.getString("zip"));
-                c.setPhoneNumber(set.getString("phoneNumber"));
-                c.setEmail(set.getString("email"));
-
-                contacts.add(c);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            ps.executeUpdate();
+            return "Contact successfully to Database";
         }
-
-        return contacts;
+        catch(Exception e){
+            return "Error adding contact";
+        }
     }
 }
