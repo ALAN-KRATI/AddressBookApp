@@ -1,7 +1,6 @@
 package com.bridgeLabz.addressbook;
 
 import com.bridgeLabz.addressbook.model.Contact;
-
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
@@ -16,36 +15,28 @@ public class AddressBookJsonTest {
     List<Contact> addressBookMemory = new ArrayList<>();
 
     @Test
-    public void updateContactInJsonServer() {
+    public void deleteContactFromJsonServer() {
 
         baseURI = "http://localhost:3000";
 
         RestAssured.defaultParser = io.restassured.parsing.Parser.JSON;
 
-        Contact updatedContact = new Contact(
-                "Rahul",
-                "Sharma",
-                "Street 999",
-                "Delhi",
-                "Delhi",
-                "110001",
-                "9999999999",
-                "rahul@gmail.com"
-        );
+        int id = 1;
 
         Response response =
                 given()
-                        .contentType("application/json")
-                        .body(updatedContact)
                 .when()
-                        .put("/contacts/1");
+                .delete("/contacts/" + id)
+                .then()
+                .statusCode(200)
+                .extract()
+                .response();
 
-        //System.out.println(response.asPrettyString());
+        System.out.println("Deleted Contact Response: " + response.asPrettyString());
 
-        Contact contactResponse = response.as(Contact.class);
+        
+        addressBookMemory.removeIf(c -> c.getId() == id);
 
-        addressBookMemory.add(contactResponse);
-
-        System.out.println("Updated Contact: " + contactResponse);
+        System.out.println("Contact removed from AddressBook memory.");
     }
 }

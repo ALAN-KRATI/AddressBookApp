@@ -1,17 +1,6 @@
 {
   "contacts": [
     {
-      "firstName": "Rahul",
-      "lastName": "Sharma",
-      "address": "Street 999",
-      "city": "Delhi",
-      "state": "Delhi",
-      "zip": "110001",
-      "phoneNumber": "9999999999",
-      "email": "rahul@gmail.com",
-      "id": "1"
-    },
-    {
       "id": "2",
       "firstName": "Priya",
       "lastName": "Singh",

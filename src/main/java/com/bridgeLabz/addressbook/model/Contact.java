@@ -1,6 +1,7 @@
 package com.bridgeLabz.addressbook.model;
 
 public class Contact {
+    private int id;
     private String firstName;
     private String lastName;
     private String address;
@@ -12,7 +13,8 @@ public class Contact {
 
     public Contact() {}
 
-    public Contact(String firstName, String lastName, String address, String city, String state, String zip, String phoneNumber, String email) {
+    public Contact(int id, String firstName, String lastName, String address, String city, String state, String zip, String phoneNumber, String email) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
@@ -86,6 +88,8 @@ public class Contact {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public int getId(){ return id; }
 
     @Override
     public String toString(){
